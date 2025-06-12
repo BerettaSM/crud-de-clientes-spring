@@ -1,6 +1,8 @@
 package com.crud.clients.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,11 @@ public class ClientController {
     @GetMapping("/{id}")
     public Client findById(@PathVariable Long id) {
         return clientService.findById(id);
+    }
+
+    @GetMapping
+    public Page<Client> findAll(Pageable pageable) {
+        return clientService.findAll(pageable);
     }
 
 }
