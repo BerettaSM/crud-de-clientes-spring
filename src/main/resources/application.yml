@@ -1,0 +1,8 @@
+spring:
+    profiles:
+        active: test
+    application:
+        name: crud-de-clientes-spring
+    jpa:
+        open-in-view: false
+ 
