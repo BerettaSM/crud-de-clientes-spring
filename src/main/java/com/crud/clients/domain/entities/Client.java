@@ -30,7 +30,7 @@ public class Client {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
     private String cpf;
     private Double income;
     private LocalDate birthDate;
