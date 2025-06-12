@@ -1,0 +1,29 @@
+package com.crud.clients.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.crud.clients.domain.entities.Client;
+import com.crud.clients.services.ClientService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping(path = "/clients",
+                produces = MediaType.APPLICATION_JSON_VALUE,
+                consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class ClientController {
+
+    private final ClientService clientService;
+
+    @GetMapping("/{id}")
+    public Client findById(@PathVariable Long id) {
+        return clientService.findById(id);
+    }
+
+}
