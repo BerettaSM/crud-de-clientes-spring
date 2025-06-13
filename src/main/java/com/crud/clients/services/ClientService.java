@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.crud.clients.domain.dto.ClientDTO;
 import com.crud.clients.domain.entities.Client;
 import com.crud.clients.repositories.ClientRepository;
+import com.crud.clients.services.exceptions.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class ClientService {
     public ClientDTO findById(Long id) {
         return clientRepository.findById(id)
             .map(ClientDTO::from)
-            .orElseThrow();
+            .orElseThrow(() -> new ResourceNotFoundException());
     }
 
     @Transactional(readOnly = true)
