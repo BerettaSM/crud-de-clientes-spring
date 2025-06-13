@@ -14,6 +14,7 @@ import com.crud.clients.repositories.ClientRepository;
 import com.crud.clients.services.exceptions.DatabaseException;
 import com.crud.clients.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -43,8 +44,13 @@ public class ClientService {
     @Transactional
     public ClientDTO update(Long id, ClientDTO dto) {
         Client client = clientRepository.getReferenceById(id);
-        copyDtoToEntity(dto, client);
-        return ClientDTO.from(clientRepository.save(client));
+        try {
+            copyDtoToEntity(dto, client);
+            return ClientDTO.from(clientRepository.save(client));
+        }
+        catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
