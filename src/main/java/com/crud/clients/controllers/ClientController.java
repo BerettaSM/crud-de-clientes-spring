@@ -21,6 +21,7 @@ import com.crud.clients.domain.dto.ClientDTO;
 import com.crud.clients.services.ClientService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -42,7 +43,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientDTO> save(
-            @RequestBody ClientDTO dto,
+            @RequestBody @Valid ClientDTO dto,
             UriComponentsBuilder builder,
             HttpServletRequest request) {
         ClientDTO saved = clientService.save(dto);
@@ -53,7 +54,9 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDTO> update(@PathVariable Long id, @RequestBody ClientDTO dto) {
+    public ResponseEntity<ClientDTO> update(
+            @PathVariable Long id,
+            @RequestBody @Valid ClientDTO dto) {
         return ResponseEntity.ok(clientService.update(id, dto));
     }
 

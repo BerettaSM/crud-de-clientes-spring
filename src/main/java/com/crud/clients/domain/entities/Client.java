@@ -35,8 +35,14 @@ public class Client {
 
     @Column(nullable = false, columnDefinition = "CHAR(11)")
     private String cpf;
+
+    @Column(nullable = false)
     private Double income;
+
+    @Column(nullable = false)
     private LocalDate birthDate;
+
+    @Column(nullable = false)
     private Integer children;
 
 }
