@@ -1,14 +1,17 @@
 package com.crud.clients.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crud.clients.domain.dto.ClientDTO;
 import com.crud.clients.domain.entities.Client;
 import com.crud.clients.repositories.ClientRepository;
+import com.crud.clients.services.exceptions.DatabaseException;
 import com.crud.clients.services.exceptions.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -44,9 +47,17 @@ public class ClientService {
         return ClientDTO.from(clientRepository.save(client));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void deleteById(Long id) {
-        clientRepository.deleteById(id);
+        if(!clientRepository.existsById(id)) {
+            throw new ResourceNotFoundException();
+        }
+        try {
+            clientRepository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Data integrity violation");
+        }
     }
 
     private void copyDtoToEntity(ClientDTO dto, Client entity) {
