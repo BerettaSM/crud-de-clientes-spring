@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crud.clients.domain.dto.ClientDTO;
+import com.crud.clients.domain.entities.Client;
 import com.crud.clients.repositories.ClientRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,23 @@ public class ClientService {
     }
 
     @Transactional
+    public ClientDTO update(Long id, ClientDTO dto) {
+        Client client = clientRepository.getReferenceById(id);
+        copyDtoToEntity(dto, client);
+        return ClientDTO.from(clientRepository.save(client));
+    }
+
+    @Transactional
     public void deleteById(Long id) {
         clientRepository.deleteById(id);
+    }
+
+    private void copyDtoToEntity(ClientDTO dto, Client entity) {
+        entity.setName(dto.getName());
+        entity.setCpf(dto.getCpf());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setIncome(dto.getIncome());
+        entity.setChildren(dto.getChildren());
     }
 
 }
