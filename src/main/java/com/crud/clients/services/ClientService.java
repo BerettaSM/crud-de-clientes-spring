@@ -28,4 +28,9 @@ public class ClientService {
         return clientRepository.findAll(pageable);
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        clientRepository.deleteById(id);
+    }
+
 }
