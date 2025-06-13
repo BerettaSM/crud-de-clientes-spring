@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.crud.clients.domain.dto.ClientDTO;
 import com.crud.clients.domain.entities.Client;
 import com.crud.clients.repositories.ClientRepository;
 
@@ -26,6 +27,11 @@ public class ClientService {
     @Transactional(readOnly = true)
     public Page<Client> findAll(Pageable pageable) {
         return clientRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public ClientDTO save(ClientDTO client) {
+        return ClientDTO.from(clientRepository.save(client.toEntity()));
     }
 
     @Transactional
