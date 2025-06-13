@@ -4,17 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crud.clients.domain.dto.ClientDTO;
 import com.crud.clients.domain.entities.Client;
+import com.crud.clients.exceptions.ExceptionUtils;
 import com.crud.clients.repositories.ClientRepository;
 import com.crud.clients.services.exceptions.DatabaseException;
 import com.crud.clients.services.exceptions.ResourceNotFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -38,18 +39,29 @@ public class ClientService {
 
     @Transactional
     public ClientDTO save(ClientDTO client) {
-        return ClientDTO.from(clientRepository.save(client.toEntity()));
+        try {
+            return ClientDTO.from(clientRepository.save(client.toEntity()));
+        }
+        catch (DataIntegrityViolationException e) {
+            if (ExceptionUtils.wasCpfViolated(e)) {
+                throw new DatabaseException("CPF already registered", HttpStatus.CONFLICT);
+            }
+            throw new DatabaseException("Data integrity violation");
+        }
     }
 
     @Transactional
     public ClientDTO update(Long id, ClientDTO dto) {
-        Client client = clientRepository.getReferenceById(id);
         try {
+            Client client = clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException());
             copyDtoToEntity(dto, client);
-            return ClientDTO.from(clientRepository.save(client));
+            return ClientDTO.from(clientRepository.saveAndFlush(client));
         }
-        catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException();
+        catch (DataIntegrityViolationException e) {
+            if (ExceptionUtils.wasCpfViolated(e)) {
+                throw new DatabaseException("CPF already registered", HttpStatus.CONFLICT);
+            }
+            throw new DatabaseException("Data integrity violation");
         }
     }
 

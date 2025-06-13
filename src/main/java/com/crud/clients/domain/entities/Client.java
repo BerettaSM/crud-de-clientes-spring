@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PACKAGE, force = true)
-@Table(name = "TBL_CLIENT")
+@Table(name = "TBL_CLIENT",
+       uniqueConstraints = @UniqueConstraint(columnNames = "cpf",
+                                             name = "UNIQUE_CPF"))
 public class Client {
 
     @Id
@@ -30,7 +33,7 @@ public class Client {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true, columnDefinition = "CHAR(11)")
+    @Column(nullable = false, columnDefinition = "CHAR(11)")
     private String cpf;
     private Double income;
     private LocalDate birthDate;
