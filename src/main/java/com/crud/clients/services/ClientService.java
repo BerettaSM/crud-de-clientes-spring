@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crud.clients.domain.dto.ClientDTO;
-import com.crud.clients.domain.entities.Client;
 import com.crud.clients.repositories.ClientRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,14 +18,16 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     @Transactional(readOnly = true)
-    public Client findById(Long id) {
+    public ClientDTO findById(Long id) {
         return clientRepository.findById(id)
+            .map(ClientDTO::from)
             .orElseThrow();
     }
 
     @Transactional(readOnly = true)
-    public Page<Client> findAll(Pageable pageable) {
-        return clientRepository.findAll(pageable);
+    public Page<ClientDTO> findAll(Pageable pageable) {
+        return clientRepository.findAll(pageable)
+            .map(ClientDTO::from);
     }
 
     @Transactional

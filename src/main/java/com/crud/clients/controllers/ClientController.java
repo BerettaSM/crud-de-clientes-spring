@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.crud.clients.domain.dto.ClientDTO;
-import com.crud.clients.domain.entities.Client;
 import com.crud.clients.services.ClientService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,12 +29,12 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping("/{id}")
-    public Client findById(@PathVariable Long id) {
+    public ClientDTO findById(@PathVariable Long id) {
         return clientService.findById(id);
     }
 
     @GetMapping
-    public Page<Client> findAll(Pageable pageable) {
+    public Page<ClientDTO> findAll(Pageable pageable) {
         return clientService.findAll(pageable);
     }
 
@@ -44,7 +43,6 @@ public class ClientController {
         return clientService.save(dto);
     }
     
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
