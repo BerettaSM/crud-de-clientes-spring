@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.beans.BeanUtils;
 
 import com.crud.clients.domain.entities.Client;
+import com.crud.clients.validation.CustomLocalDateDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -42,6 +44,7 @@ public class ClientDTO implements Serializable {
 
     @NotNull(message = "Birth date cannot be null")
     @Past(message = "Birth date must be in the past")
+    @JsonDeserialize(using = CustomLocalDateDeserializer.class)
     private LocalDate birthDate;
 
     @NotNull(message = "Children cannot be null")

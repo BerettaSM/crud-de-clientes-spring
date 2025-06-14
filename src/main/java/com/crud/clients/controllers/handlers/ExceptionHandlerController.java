@@ -12,6 +12,7 @@ import com.crud.clients.domain.dto.CustomError;
 import com.crud.clients.domain.dto.ErrorEntry;
 import com.crud.clients.domain.dto.ValidationError;
 import com.crud.clients.exceptions.ApplicationException;
+import com.crud.clients.exceptions.CustomValidationException;
 import com.crud.clients.exceptions.ExceptionUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +35,15 @@ public class ExceptionHandlerController {
             MethodArgumentNotValidException e,
             HttpServletRequest request) {
         List<ErrorEntry> errors = exceptionUtils.extractErrorsFromException(e);
+        ValidationError err = ValidationError.from(errors, request.getRequestURI());
+        return ResponseEntity.status(err.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<CustomError> customValidationException(
+            CustomValidationException e,
+            HttpServletRequest request) {
+        List<ErrorEntry> errors = e.getErrors();
         ValidationError err = ValidationError.from(errors, request.getRequestURI());
         return ResponseEntity.status(err.getStatus()).body(err);
     }
