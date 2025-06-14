@@ -23,8 +23,7 @@ public class CustomLocalDateDeserializer extends JsonDeserializer<LocalDate> imp
     private String fieldName;
 
     @Override
-    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-            throws JsonMappingException {
+    public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
         if (property != null) {
             fieldName = property.getName();
         }
